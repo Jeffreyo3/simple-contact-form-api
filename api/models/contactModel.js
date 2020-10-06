@@ -12,7 +12,9 @@ module.exports = {
 function getSubmissions() {
   return db("Users")
     .join("Emails", "Users.emails_id", "Emails.id")
-    .join("Phones", "Users.phones_id", "Phones.id");
+    .join("Phones", "Users.phones_id", "Phones.id")
+    .orderBy("submitted", "desc")
+    .select("name", "email", "phone", "message", "submitted");
 }
 
 function findEmailByEmail(email) {

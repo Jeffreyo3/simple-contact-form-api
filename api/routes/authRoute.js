@@ -5,35 +5,35 @@ const jwt = require("jsonwebtoken");
 // root directory needs a .env file with a key of SECRET for this function to work.
 const secret = process.env.SECRET;
 
-const User = require('../../models/authModel');
+const Admin = require('../models/authModel');
 
 router.get("/", (req, res) => {
   res.send(`<h2>Auth Route is alive.</h2>`);
 });
 
-router.get("/dev", (req, res) => {
-  User.getUsers()
-    .then((list) => {
-      res.status(200).json(list);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: `Error attempting login: ${err.message}` });
-    });
-});
+// router.get("/dev", (req, res) => {
+//     Admin.getAdmins()
+//     .then((list) => {
+//       res.status(200).json(list);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ error: `Error attempting login: ${err.message}` });
+//     });
+// });
 
 router.post("/register", (req, res) => {
   if (!req.body || !req.body.password || !req.body.username ) {
     res.status(400).json({ message: "Username, and password are required." });
   } else {
-    let newUser = req.body;
-    const hash = bcrypt.hashSync(newUser.password, 11);
-    newUser.password = hash;
+    let newAdmin = req.body;
+    const hash = bcrypt.hashSync(newAdmin.password, 11);
+    newAdmin.password = hash;
 
-    User.addUser(newUser)
+    Admin.addAdmin(newAdmin)
       .then((saved) => {
         const token = getToken(saved);
         res.status(201).json({
-          user: {
+            Admin: {
             id: saved.id,
             username: saved.username,
           },
@@ -46,7 +46,7 @@ router.post("/register", (req, res) => {
         } else {
           res
             .status(500)
-            .json({ error: `Error adding new User: ${err.message}` });
+            .json({ error: `Error adding new Admin: ${err.message}` });
         }
       });
   }
@@ -58,7 +58,7 @@ router.post("/login", (req, res) => {
   } else {
     let { username, password } = req.body;
 
-    User.findUser({ username })
+    Admin.findAdmin({ username })
       .first()
       .then((user) => {
         if (user && bcrypt.compareSync(password, user.password)) {
@@ -87,10 +87,10 @@ function getToken(user) {
   const tokenPayload = {
     userid: user.id,
     username: user.name,
-    role: ["User"],
+    role: ["Admin"],
     author: "Created by Jeffrey Orndorff",
   };
-  const options = { expiresIn: "3h" };
+  const options = { expiresIn: "1h" };
 
   const token = jwt.sign(tokenPayload, secret, options);
 

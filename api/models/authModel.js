@@ -1,34 +1,34 @@
 const db = require("../../data/dbConfig");
 
 module.exports = {
-  addUser,
-  findUserById,
-  findUser,
-  getUsers,
+  addAdmin,
+  findAdminById,
+  findAdmin,
+//   getAdmins,
 };
 
-// for User register
-function addUser(user) {
+// for Admin register
+function addAdmin(admin) {
   return db("admin")
-    .insert(user)
+    .insert(admin)
     .returning('id')
     .then((ids) => {
       const [id] = ids;
-      return findUserById(id);
+      return findAdminById(id);
     });
 }
-// for User register
-function findUserById(id) {
+// for Admin register
+function findAdminById(id) {
   return db("admin").where({ id }).first();
 }
-// for User login
-function findUser(filter) {
+// for Admin login
+function findAdmin(filter) {
   return db("admin")
     .select("id", "username", "password")
     .where(filter);
 }
 
-// for listing users for dev testing (excluding passwords)
-function getUsers() {
-  return db("admin").select("id", "username");
-}
+// for listing admins for dev testing (excluding passwords)
+// function getAdmins() {
+//   return db("admin").select("id", "username");
+// }

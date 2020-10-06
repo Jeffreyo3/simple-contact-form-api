@@ -7,9 +7,7 @@ require("dotenv").config();
 
 // Routes Imports
 const contactRouter = require("./routes/contactRoute");
-
-// Middleware Imports
-// const authenticate = require("./middleware/auth-middleware");
+const authRouter = require("./routes/authRoute");
 
 const server = express();
 
@@ -19,6 +17,7 @@ server.use(morgan("dev"));
 server.use(express.json());
 
 server.use("/api/submissions", contactRouter);
+server.use("/api/auth", authRouter)
 
 // Alive messages
 server.get("/", (req, res) => {

@@ -2,7 +2,10 @@ const router = require("express").Router();
 
 const Contacts = require("../models/contactModel");
 
-router.get("/", (req, res) => {
+// Auth middleware import
+const authenticate = require("../middleware/authMiddleware")
+
+router.get("/", authenticate, (req, res) => {
   Contacts.getSubmissions()
     .then((list) => {
       res.status(200).json(list);
@@ -14,7 +17,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/phone", (req, res) => {
+router.get("/phone", authenticate, (req, res) => {
   const { phone } = req.body;
   Contacts.findPhoneByPhone(phone)
     .then((finding) => {
@@ -27,7 +30,7 @@ router.post("/phone", (req, res) => {
     });
 });
 
-router.post("/email", (req, res) => {
+router.get("/email", authenticate, (req, res) => {
   const { email } = req.body;
   Contacts.findEmailByEmail(email)
     .then((finding) => {
