@@ -1,0 +1,35 @@
+CREATE TABLE "Users" (
+	"id" serial NOT NULL,
+	"name" VARCHAR(255) NOT NULL,
+	"message" VARCHAR(510) NULL,
+	"email" integer NOT NULL,
+	"phone" integer NOT NULL,
+	CONSTRAINT "Users_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "Emails" (
+	"id" serial NOT NULL,
+	"email" VARCHAR(255) NOT NULL,
+	CONSTRAINT "Emails_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "Phones" (
+	"id" serial NOT NULL,
+	"phone" VARCHAR(255) NOT NULL,
+	CONSTRAINT "Phones_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+ALTER TABLE "Users" ADD CONSTRAINT "Users_fk0" FOREIGN KEY ("email") REFERENCES "Emails"("id");
+ALTER TABLE "Users" ADD CONSTRAINT "Users_fk1" FOREIGN KEY ("phone") REFERENCES "Phones"("id");
