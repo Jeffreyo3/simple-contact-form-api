@@ -21,36 +21,36 @@ router.get("/", (req, res) => {
 //     });
 // });
 
-router.post("/register", (req, res) => {
-  if (!req.body || !req.body.password || !req.body.username ) {
-    res.status(400).json({ message: "Username, and password are required." });
-  } else {
-    let newAdmin = req.body;
-    const hash = bcrypt.hashSync(newAdmin.password, 11);
-    newAdmin.password = hash;
+// router.post("/register", (req, res) => {
+//   if (!req.body || !req.body.password || !req.body.username ) {
+//     res.status(400).json({ message: "Username, and password are required." });
+//   } else {
+//     let newAdmin = req.body;
+//     const hash = bcrypt.hashSync(newAdmin.password, 11);
+//     newAdmin.password = hash;
 
-    Admin.addAdmin(newAdmin)
-      .then((saved) => {
-        const token = getToken(saved);
-        res.status(201).json({
-            Admin: {
-            id: saved.id,
-            username: saved.username,
-          },
-          token: token,
-        });
-      })
-      .catch((err) => {
-        if (err.message.includes("UNIQUE constraint failed")) {
-          res.status(500).json({ error: `Username already registered` });
-        } else {
-          res
-            .status(500)
-            .json({ error: `Error adding new Admin: ${err.message}` });
-        }
-      });
-  }
-});
+//     Admin.addAdmin(newAdmin)
+//       .then((saved) => {
+//         const token = getToken(saved);
+//         res.status(201).json({
+//             Admin: {
+//             id: saved.id,
+//             username: saved.username,
+//           },
+//           token: token,
+//         });
+//       })
+//       .catch((err) => {
+//         if (err.message.includes("UNIQUE constraint failed")) {
+//           res.status(500).json({ error: `Username already registered` });
+//         } else {
+//           res
+//             .status(500)
+//             .json({ error: `Error adding new Admin: ${err.message}` });
+//         }
+//       });
+//   }
+// });
 
 router.post("/login", (req, res) => {
   if (!req.body || !req.body.password || !req.body.username) {
