@@ -1,10 +1,10 @@
 const db = require("../../data/dbConfig");
 
 module.exports = {
-//   addAdmin,
-//   findAdminById,
+  // addAdmin,
+  // findAdminById,
   findAdmin,
-//   getAdmins,
+  // getAdmins,
 };
 
 // for Admin register

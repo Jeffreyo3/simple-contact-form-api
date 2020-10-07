@@ -3,11 +3,11 @@ exports.seed = function (knex) {
     {
       email: "N/A",
     },
-    {
-      email: "test@test.com",
-    },
-    {
-      email: "test2@test.com",
-    },
+    // {
+    //   email: "test@test.com",
+    // },
+    // {
+    //   email: "test2@test.com",
+    // },
   ]);
 };
