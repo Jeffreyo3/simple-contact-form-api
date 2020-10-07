@@ -3,7 +3,7 @@ const router = require("express").Router();
 const Contacts = require("../models/contactModel");
 
 // Auth middleware import
-const authenticate = require("../middleware/authMiddleware")
+const authenticate = require("../middleware/authMiddleware");
 
 router.get("/", authenticate, (req, res) => {
   Contacts.getSubmissions()
@@ -48,26 +48,54 @@ router.post("/", async (req, res) => {
   // validate required data
   if (!name || !email) {
     res.status(400).json({ error: "Please include a name and contact email." });
+    return
   }
   // check if email and/or phone are on DB already
   // if they don't exist, just assign null
-  const dbEmail = await Contacts.findEmailByEmail(email)
-    .then((finding) => (finding ? finding : null))
-    .catch((err) => null);
-  const dbPhone = await Contacts.findPhoneByPhone(phone)
-    .then((finding) => (finding ? finding : null))
-    .catch((err) => null);
+  const dbEmail = email
+    ? await Contacts.findEmailByEmail(email)
+        .then(async (finding) =>
+          finding
+            ? finding.id
+            : await Contacts.addEmail(email)
+                .then((finding) => finding)
+                .catch((err) =>
+                  res
+                    .status(500)
+                    .json({ error: `There was an error adding email: ${err}` })
+                )
+        )
+        .catch((err) => null)
+    : 1;
+  const dbPhone = phone
+    ? await Contacts.findPhoneByPhone(phone)
+        .then(async (finding) =>
+          finding
+            ? finding.id
+            : await Contacts.addPhone(phone)
+                .then((finding) => finding)
+                .catch((err) =>
+                  res
+                    .status(500)
+                    .json({ error: `There was an error adding email: ${err}` })
+                )
+        )
+        .catch((err) => null)
+    : 1;
 
-  const submission = {
+  const submission = await {
     name,
-    emails_id: dbEmail ? dbEmail.id : email ? email : 1,
-    phones_id: dbPhone ? dbPhone.id : phone ? phone : 1,
+    emails_id: dbEmail,
+    phones_id: dbPhone,
     message: message ? message : null,
-    submitted: new Date().toString()
+    submitted: new Date().toString(),
   };
+  
   Contacts.addSubmission(submission)
     .then((result) => {
-      res.status(201).json({message: `Success: ${result.rowCount} row(s) inserted.`});
+      res
+        .status(201)
+        .json({ message: `Success: ${result.rowCount} row(s) inserted.` });
     })
     .catch((err) => {
       res

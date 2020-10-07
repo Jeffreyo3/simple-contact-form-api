@@ -6,7 +6,9 @@ module.exports = {
   findPhoneByPhone,
   findEmailByID,
   findPhoneByID,
-  addSubmission
+  addSubmission,
+  addEmail,
+  addPhone,
 };
 
 function getSubmissions() {
@@ -34,5 +36,25 @@ function findPhoneByID(id) {
 }
 
 function addSubmission(submission) {
-  return db("Users").insert(submission)
+  return db("Users").insert(submission);
+}
+
+function addEmail(email) {
+  return db("Emails")
+    .insert({ email })
+    .returning("id")
+    .then((ids) => {
+      const [id] = ids;
+      return id;
+    });
+}
+
+function addPhone(phone) {
+  return db("Phones")
+    .insert({ phone })
+    .returning("id")
+    .then((ids) => {
+      const [id] = ids;
+      return id;
+    });
 }
