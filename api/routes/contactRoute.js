@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
   // validate required data
   if (!name || !email) {
     res.status(400).json({ error: "Please include a name and contact email." });
-    return
+    return;
   }
   // check if email and/or phone are on DB already
   // if they don't exist, just assign null
@@ -88,9 +88,9 @@ router.post("/", async (req, res) => {
     emails_id: dbEmail,
     phones_id: dbPhone,
     message: message ? message : null,
-    submitted: new Date().toString(),
+    submitted: Date.now(),
   };
-  
+
   Contacts.addSubmission(submission)
     .then((result) => {
       res

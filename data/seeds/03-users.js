@@ -1,5 +1,5 @@
 exports.seed = function (knex) {
-  const seedDate = new Date().toString();
+  const seedDate = Date.now();
   return knex("Users").insert([
     {
       name: "Jeff",
